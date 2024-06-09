@@ -16,7 +16,7 @@ const generateAuthToken = (user) => {
 }
 
 //signup 
-router.post('/signup', async (req, res) => {
+const signup = async (req, res) => {
     try {
         console.log("signing uppppp")
         console.log('right ghere----')
@@ -41,10 +41,10 @@ router.post('/signup', async (req, res) => {
         console.log(err)
         res.status(400).send(err);
     }
-})
+}
 
 //login
-router.post('/login', async (req, res) => {
+const login = async (req, res) => {
     try {
         console.log('right ghere----')
         const { email, password } = req.body;
@@ -77,6 +77,18 @@ router.post('/login', async (req, res) => {
     } catch (err) {
         res.status(400).send(err);
     }
-})
+}
 
-module.exports = router;
+const logout = async (req, res) => {
+    try {
+
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+}
+
+module.exports = {
+    userSignup: signup,
+    userLogin: login
+};
