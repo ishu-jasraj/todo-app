@@ -48,18 +48,19 @@ const login = async (req, res) => {
     try {
         console.log('right ghere----')
         const { email, password } = req.body;
-
+        console.log("email id ", email, password);
         const checkEmailQuery = `select * from users where email = $1;`;
         const checkEmailResult = await db.query(checkEmailQuery, [email]);
-
+        console.log("result from db", checkEmailResult.rows.length);
         if (checkEmailResult.rows.length <= 0) {
             return res.status(400).send('Please enter valid email ID or password')
         }
         else {
-            const checkPasswordQuery = `select id from users where password = $1;`;
-            const checkPasswordResult = await db.query(checkPasswordQuery, [password]);
-
-            if (checkPasswordResult.rows.length <= 0) {
+            // const checkPasswordQuery = `select id from users where password = $1;`;
+            // const checkPasswordResult = await db.query(checkPasswordQuery, [password]);
+            let passkeyChecker = await bcrypt.compare(password, checkEmailResult.rows[0].password);
+            // console.log("password checkerrrr ", passkey);
+            if (!passkeyChecker) {
                 return res.status(400).send('Please enter valid email ID or password');
             }
 
