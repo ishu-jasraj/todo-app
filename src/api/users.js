@@ -81,6 +81,13 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
+        const { id: userId } = req.user;
+        console.log('logouttttt', userId)
+
+        const query = `update users set token = null where id = $1;`;
+        await db.query(query, [userId]);
+
+        res.send('Logged out successfully.');
 
     }
     catch (err) {
@@ -90,5 +97,6 @@ const logout = async (req, res) => {
 
 module.exports = {
     userSignup: signup,
-    userLogin: login
+    userLogin: login,
+    userLogout: logout
 };
