@@ -5,13 +5,11 @@ const auth = async (req, res, next) => {
     try {
         let token = req.headers['authorization'];
         token = token.replace('Bearer ', '');
-        console.log('auth token----', token)
         const tokenData = jwt.verify(token, 'myuniqueauthkey');
-        const userId = tokenData.id;
+        const userEmail = tokenData.email;
 
-        const getUserQuery = `select * from users where id = $1 and token= $2;`;
-        console.log('getUserQuery----', getUserQuery)
-        const userResult = await db.query(getUserQuery, [userId, token]);
+        const getUserQuery = `select * from users where email = $1 and token= $2;`;
+        const userResult = await db.query(getUserQuery, [userEmail, token]);
         if (userResult.rows.length <= 0) {
             throw new Error();
         }
