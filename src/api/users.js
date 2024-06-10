@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('../dbConfig/db');
 const jwt = require('jsonwebtoken');
-
+require('dotenv').config();
 
 const generateAuthToken = (user) => {
-    const token = jwt.sign(user, 'myuniqueauthkey');
+    const token = jwt.sign(user, process.env.UNIQUE_KEY);
     console.log('token---', token);
     return token;
 }
