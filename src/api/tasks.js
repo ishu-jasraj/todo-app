@@ -64,6 +64,16 @@ const fetchAllTasks = async (req, res) => {
     }
 }
 
+const checkTask = async (userId, taskId) => {
+    const checkQuery = `select id from tasks where user_id = $1 and id = $2;`;
+    const checkResult = await db.query(checkQuery, [userId, taskId]);
+
+    if (checkResult.rows.length <= 0) {
+        return false;
+    }
+
+    return true;
+}
 
 //update task by task ID
 const updateTask = async (req, res) => {
@@ -72,6 +82,15 @@ const updateTask = async (req, res) => {
         const { id } = req.body;
         console.log(req.body)
         const values = [userId, id];
+
+        //check if task with id exists or not
+        const isValidTask = await checkTask(userId, id);
+
+        if (!isValidTask) {
+            return res.status(400).send('Task with ID not found.')
+        }
+
+
         let updateCase = '';
         Object.entries(req.body).forEach(([key, value]) => {
             if (key != 'id') {
@@ -102,6 +121,13 @@ const deleteTask = async (req, res) => {
     try {
         const { id: userId } = req.user;
         const { id: taskId } = req.body;
+
+        //check if task with id exists or not
+        const isValidTask = await checkTask(userId, taskId);
+
+        if (!isValidTask) {
+            return res.status(400).send('Task with ID not found.')
+        }
 
         const deleteQuery = `Delete from tasks where id = $1 and user_id = $2;`;
         await db.query(deleteQuery, [taskId, userId]);
